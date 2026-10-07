@@ -1,0 +1,23 @@
+# Development override — mounts source for hot reload
+version: '3.9'
+
+services:
+  db:
+    ports:
+      - "5432:5432"   # expose DB port locally for pgAdmin
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/src:/app/src   # hot reload source
+    environment:
+      NODE_ENV: development
+    ports:
+      - "5000:5000"             # expose backend directly
+    command: ["node", "src/server.js"]
+
+  frontend:
+    ports:
+      - "3000:80"
